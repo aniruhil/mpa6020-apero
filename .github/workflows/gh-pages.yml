@@ -9,8 +9,7 @@ name: deployblog
 jobs:
   deployblog:
     name: Render and deploy blogdown
-    runs-on: ubuntu-latest
-
+    runs-on: macOS-latest
     steps:
       # Cloning your repository from the respective branch that has triggered it
       - uses: actions/checkout@v2
@@ -37,9 +36,20 @@ jobs:
       - name: Render blog
         run: |
           R -e 'blogdown::build_site(local = TRUE)'
+     - name: Checkout
+       uses: actions/checkout@master
+     - name: Download artifact
+       uses: actions/download-artifact@v1.0.0
+       with:
+         # Artifact name
+         name: public # optional
+         # Destination path
+         path: public # optional
       - name: Deploy to GitHub pages 🚀
-        uses: peaceiris/actions-gh-pages@v3
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB.TOKEN }}
         with:
-          branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          folder: ./public
+         email: ${{ secrets.EMAIL }}
+         build_dir: public  # optional
+#         cname: golemverse.org # optional
