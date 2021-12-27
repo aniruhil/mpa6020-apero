@@ -37,10 +37,10 @@ jobs:
         run: ls ./public
       - name: Render blog
         run: Rscript -e 'blogdown::build_site(local = FALSE)'
-      - name: Deploy
+      - name: Deploy to GitHub pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
+          branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: ./public
-
+          folder: ./public
 
