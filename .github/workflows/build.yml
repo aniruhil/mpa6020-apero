@@ -9,7 +9,7 @@ name: deployblog
 jobs:
   deployblog:
     name: Render and deploy blogdown
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       # Cloning your repository from the respective branch that has triggered it
@@ -29,18 +29,17 @@ jobs:
                   -e 'remotes::install_github("rstudio/blogdown")'
       - name: install hugo
         # Install Hugo
-        run: Rscript -e 'blogdown::install_hugo(extended = TRUE, version = "0.78.2")'
+        run: Rscript -e 'blogdown::install_hugo(extended = TRUE, version = "0.80.0")'
       - name: Get themes
         run: git submodule update --remote
-
       - name: Look at files
         run: ls ./public
       - name: Render blog
-        run: Rscript -e 'blogdown::build_site(local = FALSE)'
+        run: |
+          R -e 'blogdown::build_site(local = TRUE)'
       - name: Deploy to GitHub pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
           folder: ./public
-
